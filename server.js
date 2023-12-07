@@ -2,11 +2,23 @@ const express = require("express");
 const app = express();
 const joi = require("joi");
 app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 const multer = require("multer");
 const mongoose = require("mongoose");
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, ".uploads/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 mongoose
     .connect("mongodb+srv://Andy:G2n7aZXsvNyVpOHj@cluster0.2pbpjwf.mongodb.net/?retryWrites=true&w=majority")
@@ -22,10 +34,7 @@ const itemSchema = new mongoose.Schema({
 
 const Item = mongoose.model("Item", itemSchema);
 
-const upload = multer({dest: __dirname + "/public/images"});
-
-
-app.get("/api/characters", (req, res) => {
+app.get("/api/items", (req, res) => {
     getItems(res);
 });
 
@@ -34,7 +43,7 @@ const getItems = async (res) => {
     res.send(item);
 };
 
-app.post("/api/characters", upload.single("img"), (req, res) => {
+app.post("/api/items", upload.single("img"), (req, res) => {
     const result = validateItem(req.body);
     
     if(result.error) {
@@ -48,7 +57,7 @@ app.post("/api/characters", upload.single("img"), (req, res) => {
         link: req.body.link
     })
     if(req.file){
-        item.img = "images/" + req.file.filename;
+        item.img = "/api/images/" + req.file.filename;
     }
 
     createItem(res, item);
@@ -59,7 +68,7 @@ const createItem = async(res, item) =>{
     res.send(item);
 }
 
-app.put("/api/characters/:id", upload.single("img"), (req, res) => {
+app.put("/api/items/:id", upload.single("img"), (req, res) => {
     const result = validateItem(req.body);
     if(result.error) {
         res.status(400).send(result.error.details[0].message);
@@ -83,7 +92,7 @@ const updateItem = async (req,res) => {
     res.send(result);
 };
 
-app.delete("/api/characters/:id", upload.single("img"), (req,res) =>{
+app.delete("/api/items/:id", upload.single("img"), (req,res) =>{
     removeItem(res, req.params.id);
 });
 
