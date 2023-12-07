@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, ".uploads/");
+        cb(null, "./uploads/");
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);
@@ -85,7 +85,7 @@ const updateItem = async (req,res) => {
         link: req.body.link
     }
     if(req.file){
-        fieldsToUpdate.img = "images/" + req.file.filename;
+        fieldsToUpdate.img = "/api/images/" + req.file.filename;
     }
     
     const result = await Item.updateOne({_id:req.params.id}, fieldsToUpdate)
