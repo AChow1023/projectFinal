@@ -29,7 +29,7 @@ const itemSchema = new mongoose.Schema({
     color: String,
     description: String,
     img: String,
-    link: String
+    link: String,
 });
 
 const Item = mongoose.model("Item", itemSchema);
@@ -57,7 +57,7 @@ app.post("/api/items", upload.single("img"), (req, res) => {
         link: req.body.link
     })
     if(req.file){
-        item.img = "/uploads/" + req.file.filename;
+        item.img = "uploads/" + req.file.filename;
     }
 
     createItem(res, item);
@@ -66,7 +66,7 @@ app.post("/api/items", upload.single("img"), (req, res) => {
 const createItem = async(res, item) =>{
     const result = await item.save();
     res.send(item);
-}
+};
 
 app.put("/api/items/:id", upload.single("img"), (req, res) => {
     const result = validateItem(req.body);
@@ -85,7 +85,7 @@ const updateItem = async (req,res) => {
         link: req.body.link
     }
     if(req.file){
-        fieldsToUpdate.img = "/uploads/" + req.file.filename;
+        fieldsToUpdate.img = "uploads/" + req.file.filename;
     }
     
     const result = await Item.updateOne({_id:req.params.id}, fieldsToUpdate)
