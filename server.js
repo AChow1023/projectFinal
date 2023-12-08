@@ -85,7 +85,7 @@ const updateItem = async (req,res) => {
         link: req.body.link
     }
     if(req.file){
-        fieldsToUpdate.img = "/api/images/" + req.file.filename;
+        fieldsToUpdate.img = "uploads/" + req.file.filename;
     }
     
     const result = await Item.updateOne({_id:req.params.id}, fieldsToUpdate)
