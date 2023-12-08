@@ -57,7 +57,7 @@ app.post("/api/items", upload.single("img"), (req, res) => {
         link: req.body.link
     })
     if(req.file){
-        item.img = "/api/images/" + req.file.filename;
+        item.img = "uploads/" + req.file.filename;
     }
 
     createItem(res, item);
