@@ -54,11 +54,11 @@ app.post("/api/items", upload.single("img"), (req, res) => {
     const item = new Item({
         color: req.body.color,
         description: req.body.description,
-        link: req.body.link
-    })
+        link: req.body.link,
+    });
     if(req.file){
         item.img = "uploads/" + req.file.filename;
-    }
+    };
 
     createItem(res, item);
 });
