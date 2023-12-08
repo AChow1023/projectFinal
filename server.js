@@ -106,7 +106,7 @@ const validateItem = (item) => {
         _id: joi.allow(""),
         color: joi.string().min(3).required(),
         description: joi.string().min(3).required(),
-        link: joi.string().min(3).required()
+        link: joi.string().min(1).required()
     });
     return schema.validate(item);
 };
